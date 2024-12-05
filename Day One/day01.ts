@@ -1,5 +1,6 @@
-const fs = require("fs");
-const input = fs.readFileSync("./input.txt", "utf8").split("\n");
+import loadInput from "../utils/utils";
+
+const input = loadInput("./input.txt");
 
 var leftArray: number[] = [];
 var rightArray: number[] = [];
@@ -15,11 +16,10 @@ rightArray.sort((a, b) => a - b);
 
 const partOne = leftArray.map((left, idx) => Math.abs(left - rightArray[idx])).reduce((sum, val) => sum + val, 0);
 
-const counts = new Map<number, number>();
-rightArray.forEach((right) => {
-  const count = counts.get(right) || 0;
-  counts.set(right, count + 1);
-});
+const counts = rightArray.reduce((acc, right) => {
+  acc.set(right, (acc.get(right) || 0) + 1);
+  return acc;
+}, new Map<number, number>());
 
 const partTwo = leftArray.reduce((sum, left) => {
   const count = counts.get(left) || 0;
